@@ -1,5 +1,14 @@
 % Generated from article.md by scripts/render_article.py. Edit article.md.
 \documentclass{misisarticle}
+\IfFontExistsTF{Times New Roman}{}{
+  \setmainfont{Liberation Serif}
+  \let\cyrillicfont\relax
+  \let\cyrillicfontsf\relax
+  \let\cyrillicfonttt\relax
+  \newfontfamily\cyrillicfont{Liberation Serif}
+  \newfontfamily\cyrillicfontsf{Liberation Sans}
+  \newfontfamily\cyrillicfonttt{Liberation Mono}
+}
 \grnti{28.23.37, 16.31.21}
 \asjc{1702, 1706}
 \oecd{1.02}
