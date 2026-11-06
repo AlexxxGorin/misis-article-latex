@@ -1,80 +1,39 @@
-name: Build
+name: Build article PDF
 
 on:
   push:
   pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
 
 jobs:
-  latex:
-    # Times New Roman и Courier New уже есть в образе Windows.
-    # На ubuntu-latest их нет, и класс уходит в запасной TeX Gyre.
-    runs-on: windows-latest
-    defaults:
-      run:
-        shell: bash
+  article:
+    runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v5
+      - name: Check out repository
+        uses: actions/checkout@v4
 
-      - uses: wtfjoke/setup-tectonic@v4
-        with:
-          tectonic-version: "0.17.0"
-
-      - name: Require Times New Roman and Courier New
-        id: fonts
+      - name: Install XeLaTeX and Russian language support
         run: |
-          mkdir -p .ci-fontcheck
-          cat > .ci-fontcheck/fontcheck.tex << 'EOF'
-          \documentclass{article}
-          \usepackage{fontspec}
-          \usepackage{polyglossia}
-          \setdefaultlanguage{russian}
-          \IfFontExistsTF{Times New Roman}{}{%
-            \PackageError{fontcheck}{Times New Roman is not installed}{}%
-          }
-          \IfFontExistsTF{Courier New}{}{%
-            \PackageError{fontcheck}{Courier New is not installed}{}%
-          }
-          \setmainfont{Times New Roman}[
-            Ligatures=TeX,
-            BoldFont={Times New Roman Bold},
-            ItalicFont={Times New Roman Italic},
-            BoldItalicFont={Times New Roman Bold Italic},
-          ]
-          \newfontfamily\cyrillicfont{Times New Roman}[
-            Ligatures=TeX,
-            BoldFont={Times New Roman Bold},
-            ItalicFont={Times New Roman Italic},
-            BoldItalicFont={Times New Roman Bold Italic},
-          ]
-          \newfontfamily\cyrillicfonttt{Courier New}
-          \begin{document}
-          Проверка \textbf{жирный} \textit{курсив} \texttt{абв}
-          \end{document}
-          EOF
-          tectonic -o .ci-fontcheck .ci-fontcheck/fontcheck.tex
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends \
+            texlive-xetex texlive-lang-cyrillic texlive-latex-extra \
+            texlive-fonts-recommended fonts-texgyre
 
-      - name: Build template
-        run: mkdir -p build && tectonic -o build article.tex
+      - name: Render LaTeX from the article source
+        run: python3 scripts/render_article.py
 
-      - name: Build example
-        if: always() && steps.fonts.outcome == 'success'
-        working-directory: example
+      - name: Build PDF
         run: |
-          rm -f misisarticle.cls
-          cp ../misisarticle.cls misisarticle.cls
           mkdir -p build
-          tectonic -o build example.tex
+          xelatex -interaction=nonstopmode -halt-on-error -file-line-error -output-directory=build article.tex
+          xelatex -interaction=nonstopmode -halt-on-error -file-line-error -output-directory=build article.tex
 
       - name: Upload article PDF
-        if: always() && steps.fonts.outcome == 'success' && hashFiles('build/article.pdf') != ''
-        uses: actions/upload-artifact@v7
+        uses: actions/upload-artifact@v4
         with:
+          name: article-pdf
           path: build/article.pdf
-          archive: false
-
-      - name: Upload example PDF
-        if: always() && steps.fonts.outcome == 'success' && hashFiles('example/build/example.pdf') != ''
-        uses: actions/upload-artifact@v7
-        with:
-          path: example/build/example.pdf
-          archive: false
+          if-no-files-found: error
