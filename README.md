@@ -20,7 +20,7 @@ xelatex -interaction=nonstopmode -halt-on-error -file-line-error -output-directo
 xelatex -interaction=nonstopmode -halt-on-error -file-line-error -output-directory=build article.tex
 ```
 
-Проверенный PDF также сохранён в корне: `article.pdf`. Первый запуск Actions пока ожидает включения workflows владельцем форка.
+Проверенный PDF также сохранён в корне: `article.pdf`. Состояние облачной сборки показано значком выше. PDF каждого успешного запуска доступен в разделе Actions → Build article PDF → Artifacts → article-pdf.
 
 PDF сборки: `build/article.pdf`. GitHub Actions выполняет ту же сборку при push, pull request и ручном запуске; PDF доступен как артефакт `article-pdf` соответствующего запуска.
 
