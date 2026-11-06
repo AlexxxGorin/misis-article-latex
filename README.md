@@ -2,7 +2,7 @@
 
 [![Build article PDF](https://github.com/AlexxxGorin/misis-article-latex/actions/workflows/build.yml/badge.svg)](https://github.com/AlexxxGorin/misis-article-latex/actions/workflows/build.yml)
 
-**[Читать статью в PDF](article.pdf)** · [Исходный текст](article.md) · [LaTeX](article.tex)
+**[Читать статью в PDF](article.pdf)** · [Исходный текст](article.md) · [LaTeX](article.tex) · [Черновик для Хабра](habr/article.md)
 
 
 Статья для курса научного письма НИТУ «МИСиС». Автор — Горин Александр Олегович; научный руководитель — И. И. Пионтковская.
@@ -20,6 +20,8 @@ xelatex -interaction=nonstopmode -halt-on-error -file-line-error -output-directo
 xelatex -interaction=nonstopmode -halt-on-error -file-line-error -output-directory=build article.tex
 ```
 
-PDF: `build/article.pdf`. GitHub Actions выполняет ту же сборку при push, pull request и ручном запуске; PDF доступен как артефакт `article-pdf` соответствующего запуска.
+Проверенный PDF также сохранён в корне: `article.pdf`. Первый запуск Actions пока ожидает включения workflows владельцем форка.
+
+PDF сборки: `build/article.pdf`. GitHub Actions выполняет ту же сборку при push, pull request и ручном запуске; PDF доступен как артефакт `article-pdf` соответствующего запуска.
 
 Оформление основано на [шаблоне НИТУ «МИСиС»](https://github.com/sadekovlar/misis-article-latex). Репозиторий является форком шаблона; исходные `misisarticle.cls` и `LICENSE` сохранены. Класс распространяется под LPPL 1.3c.
