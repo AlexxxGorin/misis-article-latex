@@ -27,3 +27,6 @@ dist/
 # Python renderer
 __pycache__/
 *.pyc
+
+# Checked manuscript PDF for direct reading
+!/article.pdf
